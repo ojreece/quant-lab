@@ -179,23 +179,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The Results: –&gt; Buy and hold had higher total returns in both tests –&gt; SMA had less volatility, smaller max drawdowns, and higher Sharpe ratios –&gt; The pattern was consistent across all four window lengths</p>
 <p>My takeaway: the SMA rule buys protection from big drops at the cost of some upside. That cost was clear in a decade where US stocks mostly rose.</p>
 <p>Possible issues: Abnormal decade with mostly positive sp500 returns, cash is not re-invested into short term bonds, I replaced Faber’s indices with ETFs (because I’m not willing to pay for that data).</p>
-<p>Feel free to check out my program:</p>
-<div id="9f30395f" class="cell" data-execution_count="1">
+<div id="1893a4c6" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> yfinance <span class="im">as</span> yf</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="8ac1cbaa" class="cell" data-execution_count="2">
+<div id="420417d4" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>START_DATE <span class="op">=</span> <span class="st">"2016-01-01"</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>END_DATE <span class="op">=</span> <span class="st">"2026-01-01"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="87136d01" class="cell" data-execution_count="3">
+<div id="f2204e81" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>SP500 <span class="op">=</span> <span class="st">"SPY"</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>GAA <span class="op">=</span> {<span class="st">"SPY"</span>:<span class="st">"US Stocks"</span>, <span class="st">"EFA"</span>:<span class="st">"Foreign Stocks"</span>, <span class="st">"IEF"</span>:<span class="st">"10yr Bonds"</span>, <span class="st">"VNQ"</span>:<span class="st">"REIT"</span>, <span class="st">"GSG"</span>:<span class="st">"Commodities"</span>}</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>FUNDS <span class="op">=</span> <span class="fl">0.0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="2221256f" class="cell" data-execution_count="4">
+<div id="d2b8e851" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_prices():</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  tickers <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">set</span>([SP500, <span class="op">*</span>GAA]))</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  daily <span class="op">=</span> yf.download(tickers, start <span class="op">=</span> START_DATE, end <span class="op">=</span> END_DATE, auto_adjust <span class="op">=</span> <span class="va">True</span>, progress <span class="op">=</span> <span class="va">False</span>)[<span class="st">"Close"</span>]</span>
@@ -203,7 +202,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  monthly <span class="op">=</span> group_by_month.last().dropna(how<span class="op">=</span><span class="st">"all"</span>)</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> monthly</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="830674ad" class="cell" data-execution_count="5">
+<div id="ca23e26e" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sma_strategy(prices, assets, months):</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  returns <span class="op">=</span> prices.pct_change()</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  sma <span class="op">=</span> prices[assets].rolling(months).mean()</span>
@@ -216,11 +215,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  portfolio <span class="op">=</span> asset_returns.mean(axis <span class="op">=</span> <span class="dv">1</span>, skipna <span class="op">=</span> <span class="va">False</span>)</span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> portfolio.dropna()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="3b0138da" class="cell" data-execution_count="6">
+<div id="5482a774" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> buy_and_hold(prices, assets):</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> prices.pct_change()[assets].mean(axis<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="0cab9598" class="cell" data-execution_count="7">
+<div id="708b24ca" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> stats(returns):</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  years <span class="op">=</span> <span class="bu">len</span>(returns) <span class="op">/</span> <span class="dv">12</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  growth <span class="op">=</span> (<span class="dv">1</span> <span class="op">+</span> returns).prod()</span>
@@ -234,7 +233,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  worst_month <span class="op">=</span> returns.<span class="bu">min</span>()</span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> {<span class="st">"Total return"</span>:total_return, <span class="st">"CAGR"</span>:cagr, <span class="st">"Volatility"</span>:volatility, <span class="st">"Sharpe"</span>:sharpe, <span class="st">"Max drawdown"</span>:max_drawdown, <span class="st">"Worst month"</span>:worst_month}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="aa68df57" class="cell" data-execution_count="8">
+<div id="927c46b3" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> show(title, series):</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  start <span class="op">=</span> <span class="bu">max</span>(returns.index[<span class="dv">0</span>] <span class="cf">for</span> returns <span class="kw">in</span> series.values())</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  window <span class="op">=</span> {name: returns.loc[start:] <span class="cf">for</span> name, returns <span class="kw">in</span> series.items()}</span>
@@ -251,7 +250,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(formatted.to_string())</span>
 <span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> window</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="6234feae" class="cell" data-execution_count="9">
+<div id="206f49ff" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main():</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  prices <span class="op">=</span> get_prices()</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f"Data: </span><span class="sc">{</span>prices<span class="sc">.</span>index[<span class="dv">0</span>]<span class="sc">:</span><span class="op">%</span>Y<span class="op">-%</span>m<span class="sc">}</span><span class="ss"> to </span><span class="sc">{</span>prices<span class="sc">.</span>index[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:</span><span class="op">%</span>Y<span class="op">-%</span>m<span class="sc">}</span><span class="ss">  (test window starts </span><span class="sc">{</span>START_DATE[:<span class="dv">7</span>]<span class="sc">}</span><span class="ss">)"</span>)</span>
@@ -406,7 +405,7 @@ Saved chart: sma_results.png</code></pre>
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/ojreece\.github\.io\/quant-lab\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
