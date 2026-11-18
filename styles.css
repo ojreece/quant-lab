@@ -1,0 +1,47 @@
+:root {
+  --ql-bg: #0a0f1f;
+  --ql-text: #f4f7ff;
+  --ql-muted: #aab6d3;
+}
+body {
+  background: var(--ql-bg);
+  color: var(--ql-text);
+  font-family: "Space Grotesk", system-ui, sans-serif;
+}
+.ql-hero {
+  position: relative; overflow: hidden;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+}
+.ql-title-wrap { position: relative; z-index: 2; text-align: center; padding: 0 24px; } /*this forces title in front of waves*/
+.ql-title {
+  margin: 0; font-size: clamp(56px, 11vw, 152px);
+  line-height: 1; font-weight: 600; letter-spacing: -0.045em;
+}
+.ql-title span { font-weight: 400; }
+.ql-sub { margin: 28px auto 0; max-width: 560px; font-size: 20px; color: var(--ql-muted); text-align: center; }
+
+/* 
+Add PNG files of GARCH drift waves (pre-built with python and saved as PNG files for speed)
+*/
+
+.ql-wave {
+  position: absolute; inset: 0; pointer-events: none;
+  background-repeat: repeat-x;
+  background-size: 600px 760px;
+  background-position: 0 50%;
+}
+.ql-wave.back{background-image: url("assets/garch-back.png"); animation: ql-driftL 30s linear infinite;}
+.ql-wave.mid{background-image: url("assets/garch-mid.png"); animation: ql-driftR 20s linear infinite;}
+.ql-wave.front{background-image: url("assets/garch-front.png"); animation: ql-driftL 12s linear infinite;}
+
+@keyframes ql-driftL { to { background-position-x: -600px; } }
+@keyframes ql-driftR { from { background-position-x: -600px; } to { background-position-x: 0; } }
+
+/*fix title positioning*/ 
+body.nav-fixed:has(.ql-hero) { padding-top: 0 !important; }
+body.nav-fixed:has(.ql-hero) #quarto-content > .ql-hero { padding-top: 0; }
+body.nav-fixed:has(.ql-hero) #quarto-content,
+body.nav-fixed:has(.ql-hero) main.content { margin: 0; padding: 0; max-width: none; }
