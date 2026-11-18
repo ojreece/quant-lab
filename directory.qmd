@@ -1,0 +1,5 @@
+---
+title: "Directory"
+---
+
+- [SMA](projects/SMA.qmd)

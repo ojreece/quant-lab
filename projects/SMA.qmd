@@ -10,6 +10,17 @@ Professor Tang introduced the findings of Faber and showed that a SMA strategy o
 
 (It also acts as a good way to practice python and get out of R-world)
 
+The Results:
+--> Buy and hold had higher total returns in both tests
+--> SMA had less volatility, smaller max drawdowns, and higher Sharpe ratios 
+--> The pattern was consistent across all four window lengths 
+
+My takeaway: the SMA rule buys protection from big drops at the cost of some upside. That cost was clear in a decade where US stocks mostly rose. 
+
+Possible issues: Abnormal decade with mostly positive sp500 returns, cash is not re-invested into short term bonds, I replaced Faber's indices with ETFs (because I'm not willing to pay for that data). 
+
+Feel free to check out my program:
+
 ```{python}
 import numpy as np
 import pandas as pd
